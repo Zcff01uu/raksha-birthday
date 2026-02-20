@@ -2,14 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mehwish Birthday</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-        /* WhatsApp Notification - Fixed for Mobile */
+        /* Global Fix for horizontal scroll */
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* WhatsApp Notification */
         #notification-overlay {
             position: fixed; inset: 0; background: #0b141a; 
             display: flex; justify-content: center; align-items: flex-start;
@@ -28,9 +36,9 @@
         .wa-text h4 { margin: 0; font-size: 14px; color: black; font-weight: 600; }
         .wa-text p { margin: 0; font-size: 12px; color: #666; }
 
-        /* Lock Screen - Responsive Timer */
+        /* Lock Screen */
         #lock-screen {
-            display: none; position: fixed; inset: 0; background: var(--color-pink);
+            display: none; position: fixed; inset: 0; background: #FFC0CB; /* Default pink if var not found */
             z-index: 99998; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px;
         }
@@ -38,22 +46,25 @@
         .time-unit { background: #FF7882; color: white; padding: 8px; border-radius: 10px; border: 2px solid #333; min-width: 60px; box-shadow: 3px 3px 0px #333; }
         .time-unit span { font-size: 1.2rem; font-weight: bold; display: block; }
         
-        #pass-box input { padding: 12px; border-radius: 50px; border: 3px solid #333; width: 80%; max-width: 250px; text-align: center; }
+        #pass-box { display: none; } /* Initially hidden */
+        #pass-box input { padding: 12px; border-radius: 50px; border: 3px solid #333; width: 80%; max-width: 250px; text-align: center; font-size: 16px; }
         #pass-box button { background: #FF7882; border: 3px solid #333; padding: 10px 25px; border-radius: 50px; color: white; font-weight: bold; margin-top: 15px; cursor: pointer; }
 
-        #wrapper { display: none !important; }
+        #wrapper { display: none !important; width: 100%; }
         #wrapper.show { display: block !important; }
 
         /* Responsive Layout Fixes */
+        .content { display: flex; width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+
         @media screen and (max-width: 768px) {
-            .content { flex-direction: column !important; align-items: center; padding-top: 1rem; }
-            .content .left, .content .right { width: 100% !important; text-align: center; }
-            .title { font-size: 2rem !important; }
-            .right .image { width: 250px !important; height: 250px !important; margin: 20px auto; }
-            .balloon_one { left: -20px !important; top: -10px !important; width: 60px !important; }
-            .balloon_two { right: -20px !important; top: -10px !important; width: 60px !important; }
-            .boxMail-container { width: 95% !important; height: 350px !important; }
-            .card1 h3 { font-size: 18px !important; }
+            .content { flex-direction: column !important; align-items: center; text-align: center; }
+            .content .left, .content .right { width: 100% !important; margin-bottom: 20px; }
+            .title h1 { font-size: 2.5rem !important; display: inline-block; }
+            .right .image { width: 220px !important; height: 220px !important; margin: 20px auto; }
+            .balloon_one { left: -30px !important; width: 50px !important; }
+            .balloon_two { right: -30px !important; width: 50px !important; }
+            .boxMail-container { width: 90% !important; height: auto !important; min-height: 350px !important; }
+            .flag__birthday img { width: 120px !important; }
         }
     </style>
 </head>
@@ -82,7 +93,7 @@
     </div>
 
     <div id="wrapper">
-        <div class="flag__birthday">
+        <div class="flag__birthday" style="display: flex; justify-content: space-between; width: 100%;">
             <img src="1.png" alt="" width="200" class="flag__left">
             <img src="1.png" alt="" width="200" class="flag__right">
         </div>
@@ -108,15 +119,15 @@
                         <img src="raksha.png" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <img class="balloon_two" width="80px" src="balloon2.png" alt="" style="position: absolute; right: -50px; top: 0;">
-                    <div class="name" style="text-align: center; margin-top: 10px; font-weight: bold;">
+                    <div class="name" style="text-align: center; margin-top: 10px; font-weight: bold; font-family: 'Poppins';">
                         <i class="fa-solid fa-heart" style="color: #FF7882;"></i> Raksha <i class="fa-solid fa-heart" style="color: #FF7882;"></i>
                     </div>
                 </div>
             </div>
         </div>
 
+        <center><img src="mewmew.gif" alt="" style="max-width: 100%;"></center>
         
-        <img src="mewmew.gif" alt="">
         <div class="boxMail">
             <i class="fa-solid fa-xmark"></i>
             <div class="boxMail-container">
@@ -126,8 +137,8 @@
                 </div>
                 <div class="card2">
                     <div class="card2-content">
-                        <h2 style="font-family: 'Dancing Script'; font-size: 1.1rem; padding: 15px;">
-                            Happy birthday 🥳 raksha... suwarr tum bohot alsi ho par tum bohot bohot acche hoo 😁🥰to aaj tumhara birthdy hai juthi sahii par hai to aaj ke din enjoy karo khus rahoo samjhee  . <br><br> or firse dukhii maat rehna tum dukhii rehte ho to bekarr lagte hoo ❤️ <br><br>happy birthday tumhara best friend harsh😁😁😁😁
+                        <h2 style="font-family: 'Dancing Script'; font-size: 1.1rem; padding: 15px; line-height: 1.5;">
+                            Happy birthday 🥳 raksha... suwarr tum bohot alsi ho par tum bohot bohot acche hoo 😁🥰to aaj tumhara birthdy hai juthi sahii par hai to aaj ke din enjoy karo khus rahoo samjhee . <br><br> or firse dukhii maat rehna tum dukhii rehte ho to bekarr lagte hoo ❤️ <br><br>happy birthday tumhara best friend harsh😁😁😁😁
                         </h2>
                     </div>
                 </div>
@@ -148,7 +159,7 @@
                         clearInterval(timer);
                         $('#main-timer').hide();
                         $('#lock-title').text("Enter Password:");
-                        $('#pass-box').show();
+                        $('#pass-box').fadeIn();
                     }
                 }, 1000);
             });
@@ -161,8 +172,8 @@
             } else { alert("Wrong! Try 'suwarrr'"); }
         }
 
-        $('.mail').click(function() { $('.boxMail').addClass('active'); });
-        $('.fa-xmark').click(function() { $('.boxMail').removeClass('active'); });
+        $(document).on('click', '.mail', function() { $('.boxMail').addClass('active'); });
+        $(document).on('click', '.fa-xmark', function() { $('.boxMail').removeClass('active'); });
     </script>
 </body>
 </html>
