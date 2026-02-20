@@ -2,20 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mehwish Birthday</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; overflow-x: hidden; width: 100%; }
-        
+        /* Global Fix for horizontal scroll and layout */
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         /* WhatsApp Notification */
         #notification-overlay {
             position: fixed; inset: 0; background: #0b141a; 
             display: flex; justify-content: center; align-items: flex-start;
-            z-index: 99999;
+            z-index: 99999; overflow: hidden;
         }
         .wa-notify {
             background: white; width: 90%; max-width: 350px; padding: 12px;
@@ -27,52 +34,82 @@
         }
         @keyframes slideDown { to { top: 30px; } }
         .wa-icon { width: 45px; height: 45px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 25px; }
+        .wa-text h4 { margin: 0; font-size: 14px; color: black; font-weight: 600; }
+        .wa-text p { margin: 0; font-size: 12px; color: #666; }
 
         /* Lock Screen */
         #lock-screen {
-            display: none; position: fixed; inset: 0; background: #FFC0CB; 
+            display: none; position: fixed; inset: 0; background: #FFC0CB;
             z-index: 99998; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px;
         }
-        .time-unit { background: #FF7882; color: white; padding: 8px; border-radius: 10px; border: 2px solid #333; min-width: 60px; }
+        .timer-display { display: flex; gap: 8px; margin-top: 20px; }
+        .time-unit { background: #FF7882; color: white; padding: 8px; border-radius: 10px; border: 2px solid #333; min-width: 60px; box-shadow: 3px 3px 0px #333; }
+        .time-unit span { font-size: 1.2rem; font-weight: bold; display: block; }
+        
         #pass-box { display: none; }
-        #pass-box input { padding: 12px; border-radius: 50px; border: 3px solid #333; width: 200px; text-align: center; font-size: 16px; }
+        #pass-box input { padding: 12px; border-radius: 50px; border: 3px solid #333; width: 80%; max-width: 250px; text-align: center; font-size: 16px; }
+        #pass-box button { background: #FF7882; border: 3px solid #333; padding: 10px 25px; border-radius: 50px; color: white; font-weight: bold; margin-top: 15px; cursor: pointer; }
 
-        /* Main Wrapper */
-        #wrapper { display: none !important; width: 100%; position: relative; min-height: 100vh; }
+        #wrapper { display: none !important; width: 100%; position: relative; }
         #wrapper.show { display: block !important; }
 
-        /* Flag Fixes */
-        .flag__birthday { position: absolute; top: 0; width: 100%; z-index: 10; pointer-events: none; }
-        .flag__left { position: absolute; left: 0; top: 0; width: 120px; }
-        .flag__right { position: absolute; right: 0; top: 0; width: 120px; }
-
-        /* Content Responsive */
-        .content { display: flex; flex-direction: column; align-items: center; padding: 80px 10px 20px; text-align: center; }
-        .title h1 { font-size: 2.5rem; margin: 5px 0; }
-        .right .image { width: 200px; height: 200px; border-radius: 50%; border: 5px solid #333; overflow: hidden; margin: 20px auto; position: relative; }
-        .right .image img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .balloon_one { position: absolute; left: -40px; top: 0; width: 60px; }
-        .balloon_two { position: absolute; right: -40px; top: 0; width: 60px; }
-
-        /* Gift/Cat Gif Fix */
-        .cat-gif-container { text-align: center; margin-top: -10px; }
-        .cat-gif-container img { width: 150px; }
-
-        /* Letter/Book Box Fix */
-        .boxMail { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            width: 95%; max-width: 400px; z-index: 1000; transition: 0.5s;
+        /* CONTENT LAYOUT FIX - Preventing "door-door" effect */
+        .content { 
+            display: flex; 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 80px 20px 20px 20px; 
+            box-sizing: border-box; 
+            justify-content: space-around;
+            align-items: center;
         }
-        .boxMail.active { transform: translate(-50%, -50%) scale(1); }
-        .boxMail-container { 
-            background: white; border-radius: 15px; overflow: hidden; 
-            border: 3px solid #333; box-shadow: 10px 10px 0px #333;
+
+        /* Mobile specific adjustments */
+        @media screen and (max-width: 768px) {
+            .content { 
+                flex-direction: column !important; 
+                padding-top: 60px;
+                gap: 30px; /* Reduces space between title and photo */
+            }
+            .content .left, .content .right { 
+                width: 100% !important; 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center; 
+            }
+            .title h1 { font-size: 2.2rem !important; margin: 0; }
+            .right .image { 
+                width: 240px !important; 
+                height: 240px !important; 
+                margin: 10px auto; 
+            }
+            .balloon_one { left: -35px !important; width: 60px !important; }
+            .balloon_two { right: -35px !important; width: 60px !important; }
+            
+            /* Letter Box/Card Fix */
+            .boxMail {
+                width: 95% !important;
+                left: 2.5% !important;
+            }
+            .boxMail-container { 
+                width: 100% !important; 
+                height: auto !important; 
+                min-height: 300px !important; 
+            }
+            
+            /* Flags Visibility Fix */
+            .flag__birthday img { width: 100px !important; }
         }
-        .card1 { background: #FF7882; padding: 15px; color: white; border-bottom: 2px solid #333; }
-        .card2 { padding: 15px; background: #fff5f6; max-height: 300px; overflow-y: auto; }
-        .fa-xmark { position: absolute; right: 10px; top: -40px; font-size: 30px; color: white; cursor: pointer; }
+
+        /* Center the GIF */
+        .gif-container {
+            text-align: center;
+            width: 100%;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -100,54 +137,60 @@
     </div>
 
     <div id="wrapper">
-        <div class="flag__birthday">
-            <img src="1.png" alt="" class="flag__left">
-            <img src="1.png" alt="" class="flag__right">
+        <div class="flag__birthday" style="position: absolute; top: 0; display: flex; justify-content: space-between; width: 100%; z-index: 10;">
+            <img src="1.png" alt="" width="200" class="flag__left">
+            <img src="1.png" alt="" width="200" class="flag__right">
         </div>
         
         <div class="content">
             <div class="left">
                 <div class="title">
-                    <h1 class="happy">Happy</h1>
-                    <h1 class="birthday">Birthday</h1>
+                    <h1 class="happy">
+                        <span style="--t: 1s;">H</span><span style="--t: 1.2s;">a</span><span style="--t: 1.4s;">p</span><span style="--t: 1.6s;">p</span><span style="--t: 1.8s;">y</span>
+                    </h1>
+                    <h1 class="birthday">
+                        <span style="--t: 2s;">B</span><span style="--t: 2.2s;">i</span><span style="--t: 2.4s;">r</span><span style="--t: 2.6s;">t</span><span style="--t: 2.8s;">h</span><span style="--t: 3s;">d</span><span style="--t: 3.2s;">a</span><span style="--t: 3.4s;">y</span>
+                    </h1>
                     <div class="hat"><img src="hat.png" alt="" width="60"></div>
                 </div>
                 <div class="btn">
-                    <button id="btn__letter" style="margin: 15px 0; background: #FF7882; border: 2px solid #333; padding: 10px 20px; border-radius: 20px; color: white; font-weight: bold; cursor: pointer;">
+                    <button id="btn__letter" style="margin: 20px 0; background: #FF7882; border: 3px solid #333; padding: 10px 20px; border-radius: 50px; color: white; font-weight: bold; cursor: pointer;">
                         <div class="mail">Click Here <i class="fa-regular fa-envelope"></i></div>
                     </button>
                 </div>
             </div>
-
+            
             <div class="right">
                 <div class="box__account" style="position: relative; display: inline-block;">
-                    <img class="balloon_one" src="balloon1.png" alt="">
-                    <div class="image">
-                        <img src="raksha.png" alt="">
+                    <img class="balloon_one" width="80px" src="balloon1.png" alt="" style="position: absolute; left: -50px; top: 0;">
+                    <div class="image" style="width: 300px; height: 300px; border-radius: 50%; border: 5px solid #333; overflow: hidden;">
+                        <img src="raksha.png" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <img class="balloon_two" src="balloon2.png" alt="">
-                    <div class="name" style="margin-top: 5px; font-weight: bold; font-family: 'Poppins';">
+                    <img class="balloon_two" width="80px" src="balloon2.png" alt="" style="position: absolute; right: -50px; top: 0;">
+                    <div class="name" style="text-align: center; margin-top: 10px; font-weight: bold; font-family: 'Poppins';">
                         <i class="fa-solid fa-heart" style="color: #FF7882;"></i> Raksha <i class="fa-solid fa-heart" style="color: #FF7882;"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="cat-gif-container">
-            <img src="mewmew.gif" alt="">
+        <div class="gif-container">
+            <img src="mewmew.gif" alt="" style="max-width: 150px;">
         </div>
         
         <div class="boxMail">
-            <i class="fa-solid fa-xmark"></i>
-            <div class="boxMail-container">
-                <div class="card1">
-                    <div class="userImg" style="text-align: center;"><img src="suwarr.png" alt="" width="60"></div>
-                    <h3 style="text-align: center; margin: 10px 0; font-size: 16px;">Happy Birthday raksha</h3>
+            <i class="fa-solid fa-xmark" style="position: absolute; right: 10px; top: 10px; z-index: 100; cursor: pointer;"></i>
+            <div class="boxMail-container" style="position: relative; background: white; border: 3px solid #333; border-radius: 15px; overflow: hidden; margin: 0 auto;">
+                <div class="card1" style="background: #FF7882; padding: 15px; color: white; text-align: center; border-bottom: 3px solid #333;">
+                    <div class="userImg"><img src="suwarr.png" alt="" width="60"></div>
+                    <h3>Happy Birthday raksha</h3>
                 </div>
-                <div class="card2">
-                    <h2 style="font-family: 'Dancing Script'; font-size: 1.1rem; line-height: 1.4; margin: 0;">
-                        Happy birthday 🥳 raksha... suwarr tum bohot alsi ho par tum bohot bohot acche hoo 😁🥰to aaj tumhara birthdy hai juthi sahii par hai to aaj ke din enjoy karo khus rahoo samjhee . <br><br> or firse dukhii maat rehna tum dukhii rehte ho to bekarr lagte hoo ❤️ <br><br>happy birthday tumhara best friend harsh😁😁😁😁
-                    </h2>
+                <div class="card2" style="background: white; padding: 10px;">
+                    <div class="card2-content">
+                        <h2 style="font-family: 'Dancing Script'; font-size: 1.1rem; padding: 10px; line-height: 1.5; margin: 0;">
+                            Happy birthday 🥳 raksha... suwarr tum bohot alsi ho par tum bohot bohot acche hoo 😁🥰to aaj tumhara birthdy hai juthi sahii par hai to aaj ke din enjoy karo khus rahoo samjhee . <br><br> or firse dukhii maat rehna tum dukhii rehte ho to bekarr lagte hoo ❤️ <br><br>happy birthday tumhara best friend harsh😁😁😁😁
+                        </h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -161,9 +204,7 @@
                 let timeLeft = 5;
                 let timer = setInterval(function() {
                     timeLeft--;
-                    if(timeLeft >= 0) {
-                        document.getElementById("seconds").innerText = timeLeft < 10 ? "0" + timeLeft : timeLeft;
-                    }
+                    document.getElementById("seconds").innerText = timeLeft < 10 ? "0" + timeLeft : timeLeft;
                     if (timeLeft <= 0) {
                         clearInterval(timer);
                         $('#main-timer').hide();
